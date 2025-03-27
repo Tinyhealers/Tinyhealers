@@ -3,7 +3,6 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import otpRoutes from './routes/otpRoutes.js';
-import { createClient } from '@supabase/supabase-js';
 
 const app = express();
 
@@ -14,17 +13,6 @@ app.use(cors({
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization', 'clientId', 'clientSecret']
 }));
-
-// Supabase Client
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
-app.set('supabase', supabase); // Make Supabase available to controllers
-
-const { CLIENT_ID, CLIENT_SECRET } = process.env;
-
-if (!CLIENT_ID || !CLIENT_SECRET) {
-    console.error("❌ CLIENT_ID or CLIENT_SECRET is missing in .env file!");
-    process.exit(1);
-}
 
 app.use('/api', otpRoutes);
 app.get('/api/hello', (req, res) => {
